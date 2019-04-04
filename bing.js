@@ -6,6 +6,9 @@ let board = [[false, false, false, false, false],
 let common = [];
 let donators = [];
 
+let bamm = new Audio('bamm.m4a');
+let bing = new Audio("bing.m4a");
+
 let  grid = document.getElementById("flex-grid");
 
 function generateCards(items) {
@@ -38,17 +41,13 @@ function generateCards(items) {
 function clickHandler(box) {
     let i = box.id[3];
     let j = box.id[4];
-    board[i][j] = true;
-
-    let bamm = new Audio('bamm.m4a');
-    bamm.play();
-
-    box.style.backgroundColor = "#addaff";
-    console.log(box)
-    
-   // console.log(i, j);
-    console.log(board);
-    checkBoard(i, j);
+    if(!board[i][j]){
+        board[i][j] = true;
+        bamm.currentTime = 0;
+        bamm.play();
+        box.style.backgroundColor = "#addaff";
+        checkBoard(i, j);
+  }
 }
 
 function checkBoard(i, j) {
@@ -76,7 +75,6 @@ function bingo() {
     victory_music.voluem = .7;
     victory_music.play();
 
-    let bing = new Audio("bing.m4a");
     bing.play();
     
     let pepe = document.createElement("img");

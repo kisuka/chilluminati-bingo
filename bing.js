@@ -2,11 +2,17 @@ let board = [[false, false, false, false, false],
              [false, false, false, false, false],
              [false, false, true, false, false],
              [false, false, false, false, false],
-            [false, false, false, false, false]]
+            [false, false, false, false, false]];
+let common = [];
+let donators = [];
+
+let bamm = new Audio('bamm.m4a');
+let bing = new Audio("bing.m4a");
 
 let  grid = document.getElementById("flex-grid");
 
 function generateCards(items) {
+    items = Object.assign([], items)
     for (i = 0; i < 5; i++) {
         row = document.createElement("div")
         row.id = "row" + i
@@ -35,17 +41,13 @@ function generateCards(items) {
 function clickHandler(box) {
     let i = box.id[3];
     let j = box.id[4];
-    board[i][j] = true;
-
-    let bamm = new Audio('bamm.m4a');
-    bamm.play();
-
-    box.style.backgroundColor = "#addaff";
-    console.log(box)
-    
-   // console.log(i, j);
-    console.log(board);
-    checkBoard(i, j);
+    if(!board[i][j]){
+        board[i][j] = true;
+        bamm.currentTime = 0;
+        bamm.play();
+        box.style.backgroundColor = "#addaff";
+        checkBoard(i, j);
+  }
 }
 
 function checkBoard(i, j) {
@@ -73,7 +75,6 @@ function bingo() {
     victory_music.voluem = .7;
     victory_music.play();
 
-    let bing = new Audio("bing.m4a");
     bing.play();
     
     let pepe = document.createElement("img");
@@ -143,16 +144,21 @@ function newBoard() {
     grid.id = "flex-grid";
     container.appendChild(grid);
 
-    let donators = document.getElementById("donators_checkbox");
-    let common_stuff = ["Pepega", "Wirecast crashes", "Ovipositor", "Someone bullies Simon", "Beans", "BUY MY FUCKING BREAD", "Smiley face", "Slightly Smiley face", "Peas in my nose", "Verry/Berry cool", "Yogventures joke", "BING", "Sjnfact", "Someone is playing a different game", "Baby birding comes upp", "Edgy joke by Simon", "Edgy joke by not Simon", "Simon says pusskin", "Excuse me sir?!?!", "#1 Best Boy", "Hat films beef comes upp", "The *other* Chilluminati comes up", "Pissing in eachothers asses", "The Danny Dyer school of X", "Foreign accent", "Tim Westwood impression", "Barry plays dark souls", "Thex dox someone", "Tom chest hair", "Simon (almost) spitts out his mint", "X million dollars they were gonna give us", "BAMM!", "SHUT UP SHUT UP SHUT UP!!", "We are banned", "Feels weird man", "Feels bad man", "War Of The Worlds - The Eve of the War", "Teasing Steve", "They mix up the beccas", "YogP", "Hotpie is racist?", "Semi-deci-hundo", "Notch comes up", "VIPing someone as punishment", "We are behind on donations", "Stream starts late", "Birthday song"];    
-var frequent_donators = ["Norman Wheatspawn donation", "Corgienetwork donation", "url_becca donation", "Cthulhu roleplaying guy donation", "ChappieTriggerHappy donation", "Piss guy donation", "FluteBustingPrussion donation", "AtomicSnowglobe donation", "The porn barron donation", "Fact guy donation", "Quote guy donation"];
+    let useDonators = document.getElementById("donators_checkbox").checked;
 
-    if (donators.checked) {
-        generateCards(common_stuff.concat(frequent_donators));
+    if (useDonators) {
+        generateCards(common.concat(donators));
     } else {
-        generateCards(common_stuff);
+        generateCards(common);
     }
     
 }
 
-newBoard();
+function load(){
+    fetch(`options.json`).then(val => val.json()).then((options) => {
+        common = options['common'];
+        donators = options['donators'];
+        newBoard();
+    })
+}
+load();

@@ -71,3 +71,17 @@ form {
 .box: {
     background-color: green;
 }
+.gen-button {
+    border: none;
+    background-color: #008dff;
+    border-radius: 5px;
+    padding: 20px;
+    color: #fff;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform ease-in .2s;
+}
+.gen-button:hover {
+    transform: scale(1.1);
+    transition: transform ease-in .2s;
+}

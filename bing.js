@@ -70,7 +70,11 @@ function checkBoard(i, j) {
 
 function bingo() {
     let victory_music = new Audio("victory_music.m4a");
+    victory_music.voluem = .7;
     victory_music.play();
+
+    let bing = new Audio("bing.m4a");
+    bing.play();
     
     let pepe = document.createElement("img");
     pepe.src = "medium_pepe.gif";
@@ -105,6 +109,7 @@ function bingo() {
 
     confetti.style.width = w + "px";
     confetti.style.height = h + "px";
+    confetti.style.opacity = .8;
     confetti.style.zIndex = 3;
 
     let yogp = document.createElement("img");

@@ -6,48 +6,57 @@ let board = [[false, false, false, false, false],
 let common = [];
 let donators = [];
 
-let bamm = new Audio('bamm.m4a');
-let bing = new Audio("bing.m4a");
+let bamm = new Audio('/assets/bamm.m4a');
+let bing = new Audio("/assets/bing.m4a");
 
 let  grid = document.getElementById("flex-grid");
 
 function generateCards(items) {
-    items = Object.assign([], items)
+    items = Object.assign([], items);
+
     for (i = 0; i < 5; i++) {
-        row = document.createElement("div")
-        row.id = "row" + i
+        row = document.createElement("div");
+        row.id = "row" + i;
+
         for (j = 0; j < 5; j++) {
             if (i === 2 && j === 2) {
                 let  box = document.createElement("div");
                 box.textContent = "FREE";
-                box.id = "box" + i + "" + j;
+                box.dataset.rowid = i;
+                box.dataset.boxid = j;
                 box.className = "box";
-                box.style.backgroundColor = "#addaff";
                 box.addEventListener("click", () => { clickHandler(box);}, false);
                 row.appendChild(box);
                 continue;
             }
+
             let  box = document.createElement("div");
-            box.textContent = getRandomElement(items)
-            box.id = "box" + i + "" + j
-            box.className = "box"
+            box.textContent = getRandomElement(items);
+            box.dataset.rowid = i;
+            box.dataset.boxid = j;
+            box.className = "box";
             box.addEventListener("click", () => { clickHandler(box);}, false);
             row.appendChild(box);
         }
-        grid.appendChild(row)
+
+        grid.appendChild(row);
     }
 };
 
 function clickHandler(box) {
-    let i = box.id[3];
-    let j = box.id[4];
-    if(!board[i][j]){
-        board[i][j] = true;
+    var rowId = box.dataset.rowid;
+    var boxId = box.dataset.boxid;
+
+    if (!board[rowId][boxId]) {
+        board[rowId][boxId] = true;
         bamm.currentTime = 0;
         bamm.play();
-        box.style.backgroundColor = "#addaff";
-        checkBoard(i, j);
-  }
+    } else {
+        board[rowId][boxId] = false;
+    }
+
+    box.classList.toggle("is-active");
+    checkBoard(i, j);
 }
 
 function checkBoard(i, j) {
@@ -71,28 +80,28 @@ function checkBoard(i, j) {
 }
 
 function bingo() {
-    let victory_music = new Audio("victory_music.m4a");
+    let victory_music = new Audio("/assets/victory_music.m4a");
     victory_music.voluem = .7;
     victory_music.play();
 
     bing.play();
     
     let pepe = document.createElement("img");
-    pepe.src = "medium_pepe.gif";
+    pepe.src = "/assets/medium_pepe.gif";
     pepe.style.position = 'absolute';
     pepe.style.left = '10px';
     pepe.style.top = '10px';
     pepe.style.zIndex = 2;
     
     let pepe2 = document.createElement("img");
-    pepe2.src = "medium_pepe.gif";
+    pepe2.src = "/assets/medium_pepe.gif";
     pepe2.style.position = 'absolute';
     pepe2.style.right = '10px';
     pepe2.style.top = '10px';
     pepe2.style.zIndex = 2;
 
     let confetti = document.createElement("img");
-    confetti.src = "confetti.gif";
+    confetti.src = "/assets/confetti.gif";
     confetti.style.position = "absolute";
     confetti.style.top = "0px";
     confetti.style.left = "0px";
@@ -114,7 +123,7 @@ function bingo() {
     confetti.style.zIndex = 3;
 
     let yogp = document.createElement("img");
-    yogp.src = "yogp.gif"
+    yogp.src = "/assets/yogp.gif"
     yogp.style.position = "absolute";
     yogp.style.left = (w / 2) - (w * 0.15) + "px";
     yogp.style.top = (w / 2) - (w * 0.32) + "px";
@@ -154,11 +163,12 @@ function newBoard() {
     
 }
 
-function load(){
+function load() {
     fetch(`options.json`).then(val => val.json()).then((options) => {
         common = options['common'];
         donators = options['donators'];
         newBoard();
     })
 }
+
 load();
